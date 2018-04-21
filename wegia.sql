@@ -5,7 +5,7 @@ use wegia;
 create table funcionario(
 	id_funcionario int not null primary key, # cpf do funcionario 
 	
-    image varchar(15000),
+    image mediumtext,
     nome varchar(100),
     telefone int,
     vtp int,
@@ -103,3 +103,5 @@ create table cargo_funcionalidade(
 insert into cargo_funcionalidade(id_cargo,id_funcionalidade)
 values
 (05,01);
+
+select user();
