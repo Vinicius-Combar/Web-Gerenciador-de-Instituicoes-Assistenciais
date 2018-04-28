@@ -8,20 +8,19 @@ create table funcionario(
     image mediumtext,
     nome varchar(100),
     telefone int,
-    vtp int,
-    dt_adm date not null,
-    dt_nasc date not null,
+    vale_transporte int,
+    data_admissao date not null,
+    data_nascimento date not null,
     idade int not null,
-    rg int not null, 
+    registro_geral int not null, 
     orgao_emissor varchar(20) not null,
     data_expedicao date,
-    cpf_funcionario int not null,
 	pis int,
     ctps int not null,
     uf_ctps varchar(2),
     zona int not null,
-    cert_reser_num int,
-	cert_reser_serie varchar(1),
+    certificado_reservista_numero int,
+	certificado_reservista_serie varchar(1),
     cep int not null,
     cidade varchar(40) not null,
     bairro varchar(40) not null,
@@ -32,14 +31,19 @@ create table funcionario(
     nome_mae varchar(100),
     nome_pai varchar(100)
 	
-)engine = InnoDB;
+)engine = InnoDB;/* criação da tabela funcionario, irá armazenar todos os funcionarios e suas informações. A partir dela
+há uma verificação nela antes de ser criado um usuário, só pode haver um usuário de um funcionário se este estiver 
+cadastrado na tabela funcionários. Será pedido o CPF na hora do cadastro de uma conta, esse CPF será procurado na tabela
+funcionários, se este existir ele reconhecerá que a conta a ser criada pertence ao funcionário com CPF correspondente.
+Se não for encontrado esse CPF na tabela funcionário, não poderá ser criada a conta */
 
 create table cargo(
 	id_cargo int not null primary key,
     
     nome varchar(30)
     
-)engine = InnoDB;
+)engine = InnoDB; /* O cargo que o usuário tiver definirá a quais tabelas ele terá acesso e quais não, se é possível 
+modificá-la ou apenas fazer uma consulta nela. */
 
 insert into cargo(id_cargo,nome)
 values
@@ -60,7 +64,7 @@ values
 (15,'Recepcionista'),
 (16,'Serviços Gerais'),
 (17,'Técnico de Enfermagem'),
-(18,'Técnico de Informática');
+(18,'Técnico de Informática'); /* cargos existentes na tabela CARGO */
 
 create table funcionario_cargo(
 	id_cargo int not null,
@@ -69,7 +73,7 @@ create table funcionario_cargo(
     primary key(id_cargo,id_funcionario),
     foreign key(id_cargo) references cargo(id_cargo),
     foreign key(id_funcionario) references funcionario(id_funcionario)
-)engine = InnoDB;
+)engine = InnoDB; /* Definirá quais os cargos o funcionário terá. */
 
 create table usuario(
 	id_usuario int not null primary key, # cpf do funcionario 
@@ -79,18 +83,19 @@ create table usuario(
     
     foreign key(id_usuario) references funcionario(id_funcionario) 
 
-)engine = InnoDB;
+)engine = InnoDB; /* tabela que criará a conta que será utilizada pelo usuário */
 
 create table funcionalidade(
 	id_funcionalidade int not null primary key,
 	
     descricao varchar(100)
-)engine = InnoDB;
+)engine = InnoDB; /* tabela que tem uma ligação de muitos para muitos com o cargo. Ela diz as tabelas que poderão ser 
+ acessadas pelos cargos */
 
 insert into funcionalidade(id_funcionalidade,descricao)
 values
 (01,'alimentos'),
-(02,'estoque');
+(02,'estoque'); /* tabelas que serão acessadas */
 
 create table cargo_funcionalidade(
 	id_cargo int not null,
@@ -98,10 +103,86 @@ create table cargo_funcionalidade(
     
     foreign key(id_cargo) references cargo(id_cargo),
     foreign key(id_funcionalidade) references funcionalidade(id_funcionalidade)
-)engine = InnoDB;
+)engine = InnoDB; # tabela que vai definir qual cargo acessa qual tabela
 
 insert into cargo_funcionalidade(id_cargo,id_funcionalidade)
 values
-(05,01);
+(05,01),
+(05,02);
 
-select user();
+#select user();
+
+create table produto(
+	id_produto int not null primary key,
+    id_funcionario int not null,
+    
+    descricao varchar(50),
+    #tipo_produto varchar(),
+	foreign key(id_funcionario) references funcionario(id_funcionario)
+)engine = InnoDB; # vai dizer quais produtos existem na instituição. Ex: arroz, feijão, camisa masculina, casaco, roteador...
+
+
+create table estoque(
+	id_estoque int not null primary key,
+    id_produto int not null,
+    qtd int,
+    foreign key(id_produto) references produto(id_produto)
+)engine = InnoDB;  # 
+
+create table entrada(
+	id_entrada int not null primary key,
+    data_entrada date,
+    responsavel int not null,
+    
+    foreign key(responsavel) references funcionario(id_funcionario)
+    
+)engine = InnoDB;
+
+create table item_entrada(
+	id_item_entrada int not null primary key,
+    id_produto int not null,
+    
+    foreign key(id_produto) references produto(id_produto)
+)engine = InnoDB;
+
+create table saida(
+	id_saida int not null primary key,
+    id_produto int not null,
+    #id_responsavel int not null,
+    data_saida date,
+    
+    #foreign key(id_responsavel) references funcionario(id_funcionario),
+    foreign key(id_produto) references produto(id_produto)
+
+)engine = InnoDB;
+
+create table item_saida(
+	id_item_saida int not null primary key,
+    id_produto int not null,
+    
+    foreign key(id_produto) references produto(id_produto)
+)engine = InnoDB;
+
+/*create table destino(
+	
+)engine = InnoDB;*/
+
+create table socio(
+	id_socio int not null primary key,
+    nome varchar(100) not null,
+    cpf varchar(14) not null,
+	email varchar(80) not null,
+    email_secundário varchar(80),
+    telefone varchar(13) not null,
+    cep varchar(9) not null,
+    estado varchar(2),
+    cidade varchar(30),
+    bairro varchar(40),
+    rua varchar(40),
+    complemento varchar(100),
+    data_nascimento date,
+    valor decimal(10,2) not null
+)engine = InnoDB;
+
+/*create table log(
+);*/
