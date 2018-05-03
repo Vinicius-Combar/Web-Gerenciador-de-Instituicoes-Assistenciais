@@ -11,7 +11,6 @@ create table funcionario(
     vale_transporte int,
     data_admissao date not null,
     data_nascimento date not null,
-    idade int not null,
     registro_geral int not null, 
     orgao_emissor varchar(20) not null,
     data_expedicao date,
@@ -85,82 +84,96 @@ create table usuario(
 
 )engine = InnoDB; /* tabela que criará a conta que será utilizada pelo usuário */
 
-create table funcionalidade(
-	id_funcionalidade int not null primary key,
+create table permissao(
+	id_permissao int not null primary key,
 	
     descricao varchar(100)
 )engine = InnoDB; /* tabela que tem uma ligação de muitos para muitos com o cargo. Ela diz as tabelas que poderão ser 
  acessadas pelos cargos */
 
-insert into funcionalidade(id_funcionalidade,descricao)
+insert into permissao(id_permissao,descricao)
 values
 (01,'alimentos'),
 (02,'estoque'); /* tabelas que serão acessadas */
 
-create table cargo_funcionalidade(
+create table cargo_permissao(
 	id_cargo int not null,
-    id_funcionalidade int not null,
+    id_permissao int not null,
     
     foreign key(id_cargo) references cargo(id_cargo),
-    foreign key(id_funcionalidade) references funcionalidade(id_funcionalidade)
+    foreign key(id_permissao) references permissao(id_permissao)
 )engine = InnoDB; # tabela que vai definir qual cargo acessa qual tabela
 
-insert into cargo_funcionalidade(id_cargo,id_funcionalidade)
+insert into cargo_permissao(id_cargo,id_permissao)
 values
 (05,01),
 (05,02);
 
 #select user();
 
+create table categoria(
+	id_categoria int not null primary key,
+    descricao varchar(50)
+)engine = InnoDB;
+
 create table produto(
 	id_produto int not null primary key,
-    id_funcionario int not null,
-    
+    id_categoria int not null,
     descricao varchar(50),
-    #tipo_produto varchar(),
-	foreign key(id_funcionario) references funcionario(id_funcionario)
-)engine = InnoDB; # vai dizer quais produtos existem na instituição. Ex: arroz, feijão, camisa masculina, casaco, roteador...
 
+    foreign key(id_categoria) references categoria(id_categoria)
+)engine = InnoDB; # vai dizer quais produtos existem na instituição. Ex: arroz, feijão, camisa masculina, casaco, roteador...
 
 create table estoque(
 	id_estoque int not null primary key,
     id_produto int not null,
-    qtd int,
+    qtd float,
+    
     foreign key(id_produto) references produto(id_produto)
-)engine = InnoDB;  # 
+)engine = InnoDB;
 
 create table entrada(
 	id_entrada int not null primary key,
+    id_funcionario int not null,
     data_entrada date,
-    responsavel int not null,
+    total float,
     
-    foreign key(responsavel) references funcionario(id_funcionario)
+    foreign key(id_funcionario) references funcionario(id_funcionario)
     
 )engine = InnoDB;
 
 create table item_entrada(
 	id_item_entrada int not null primary key,
+    id_entrada int not null,
     id_produto int not null,
+    qtd float,
+    valor_unitario float,
     
+    foreign key(id_entrada) references entrada(id_entrada),
     foreign key(id_produto) references produto(id_produto)
 )engine = InnoDB;
 
 create table saida(
 	id_saida int not null primary key,
-    id_produto int not null,
-    #id_responsavel int not null,
+    id_funcionario int not null,
     data_saida date,
+    total float,
     
-    #foreign key(id_responsavel) references funcionario(id_funcionario),
-    foreign key(id_produto) references produto(id_produto)
+    foreign key(id_funcionario) references funcionario(id_funcionario)
+    
 
 )engine = InnoDB;
 
 create table item_saida(
 	id_item_saida int not null primary key,
+    id_saida int not null,
     id_produto int not null,
+    qtd float,
+    valor_unitario float,
     
+    foreign key(id_saida) references saida(id_saida),
     foreign key(id_produto) references produto(id_produto)
+
 )engine = InnoDB;
 
 /*create table destino(
