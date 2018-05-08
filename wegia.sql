@@ -25,6 +25,14 @@ create table pessoa (
     complemento varchar(50)
     
 )engine = InnoDB;
+/*
+create table voluntario(
+	id_voluntario int not null primary key,
+    id_pessoa int not null,
+    
+    foreign key(id_pessoa) references pessoa(id_pessoa)
+    
+)engine = InnoDB;
 
 create table voluntario_judicial(
 	id_voluntario_judicial int not null primary key,
@@ -33,7 +41,7 @@ create table voluntario_judicial(
     mandado_judicial varchar(40),
     foreign key(id_pessoa) references pessoa(id_pessoa)
 )engine = InnoDB;
-
+*/
 create table funcionario(
 	id_funcionario int not null primary key, # cpf do funcionario 
     id_usuario int,
