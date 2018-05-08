@@ -2,15 +2,49 @@ create database wegia default charset utf8;
 
 use wegia;
 
-create table funcionario(
-	id_funcionario int not null primary key, # cpf do funcionario 
-	
-    image mediumtext,
+create table usuario(
+	id_usuario int not null primary key, # cpf do funcionario 
+    
+    login varchar(100),
+    senha varchar(200)
+
+)engine = InnoDB; /* tabela que criará a conta que será utilizada pelo usuário */
+
+create table pessoa (
+	id_pessoa int not null primary key,
+    
     nome varchar(100),
     telefone int,
+    data_nascimento date not null,
+    cep int not null,
+    cidade varchar(40) not null,
+    bairro varchar(40) not null,
+    ibge int,
+    rua varchar(40) not null,
+    numero_endereco int,
+    complemento varchar(50)
+    
+)engine = InnoDB;
+
+create table voluntario_judicial(
+	id_voluntario_judicial int not null primary key,
+    id_pessoa int not null,
+    
+    mandado_judicial varchar(40),
+    foreign key(id_pessoa) references pessoa(id_pessoa)
+)engine = InnoDB;
+
+create table funcionario(
+	id_funcionario int not null primary key, # cpf do funcionario 
+    id_usuario int,
+    id_pessoa int not null,
+    
+    image mediumtext,
+    #nome varchar(100),
+    #telefone int,
     vale_transporte int,
     data_admissao date not null,
-    data_nascimento date not null,
+    #data_nascimento date not null,
     registro_geral int not null, 
     orgao_emissor varchar(20) not null,
     data_expedicao date,
@@ -19,17 +53,20 @@ create table funcionario(
     uf_ctps varchar(2),
     zona int not null,
     certificado_reservista_numero int,
-	certificado_reservista_serie varchar(1),
-    cep int not null,
+	certificado_reservista_serie varchar(10),
+    /*cep int not null,
     cidade varchar(40) not null,
     bairro varchar(40) not null,
     ibge int,
     rua varchar(40) not null,
     numero_endereco int,
-    complemento varchar(100),
+    complemento varchar(100),*/
     nome_mae varchar(100),
-    nome_pai varchar(100)
+    nome_pai varchar(100),
 	
+    foreign key(id_usuario) references usuario(id_usuario),
+    foreign key(id_pessoa) references pessoa(id_pessoa)
+    
 )engine = InnoDB;/* criação da tabela funcionario, irá armazenar todos os funcionarios e suas informações. A partir dela
 há uma verificação nela antes de ser criado um usuário, só pode haver um usuário de um funcionário se este estiver 
 cadastrado na tabela funcionários. Será pedido o CPF na hora do cadastro de uma conta, esse CPF será procurado na tabela
@@ -73,16 +110,6 @@ create table funcionario_cargo(
     foreign key(id_cargo) references cargo(id_cargo),
     foreign key(id_funcionario) references funcionario(id_funcionario)
 )engine = InnoDB; /* Definirá quais os cargos o funcionário terá. */
-
-create table usuario(
-	id_usuario int not null primary key, # cpf do funcionario 
-    
-    login varchar(100),
-    senha varchar(200),
-    
-    foreign key(id_usuario) references funcionario(id_funcionario) 
-
-)engine = InnoDB; /* tabela que criará a conta que será utilizada pelo usuário */
 
 create table permissao(
 	id_permissao int not null primary key,
