@@ -2,18 +2,13 @@ create database wegia default charset utf8;
 
 use wegia;
 
-create table usuario(
-	id_usuario int not null primary key, # cpf do funcionario 
-    
-    login varchar(100),
-    senha varchar(200)
-
-)engine = InnoDB; /* tabela que criará a conta que será utilizada pelo usuário */
-
 create table pessoa (
 	id_pessoa int not null primary key,
     
+    login varchar(40), #CPF da pessoa
+    senha varchar(70),
     nome varchar(100),
+    sexo varchar(10),
     telefone int,
     data_nascimento date not null,
     cep int not null,
@@ -25,7 +20,21 @@ create table pessoa (
     complemento varchar(50)
     
 )engine = InnoDB;
-/*
+
+create table interno(
+	id_interno int not null primary key,
+    id_pessoa int not null,
+    
+    internacao date not null,
+    saida date,
+    readmitido date,
+    orbito date,
+    nome_contato_urgente varchar(60),
+    telefone_contato_urgente varchar(33)
+    
+    
+);
+
 create table voluntario(
 	id_voluntario int not null primary key,
     id_pessoa int not null,
@@ -38,12 +47,12 @@ create table voluntario_judicial(
 	id_voluntario_judicial int not null primary key,
     id_pessoa int not null,
     
-    mandado_judicial varchar(40),
+   documneto_judicial varchar(40),
     foreign key(id_pessoa) references pessoa(id_pessoa)
 )engine = InnoDB;
-*/
+
 create table funcionario(
-	id_funcionario int not null primary key, # cpf do funcionario 
+	id_funcionario int not null primary key,
     id_usuario int,
     id_pessoa int not null,
     
@@ -72,7 +81,6 @@ create table funcionario(
     nome_mae varchar(100),
     nome_pai varchar(100),
 	
-    foreign key(id_usuario) references usuario(id_usuario),
     foreign key(id_pessoa) references pessoa(id_pessoa)
     
 )engine = InnoDB;/* criação da tabela funcionario, irá armazenar todos os funcionarios e suas informações. A partir dela
@@ -213,7 +221,7 @@ create table item_saida(
 
 /*create table destino(
 	
-)engine = InnoDB;*/
+)engine = InnoDB;
 
 create table socio(
 	id_socio int not null primary key,
@@ -232,5 +240,5 @@ create table socio(
     valor decimal(10,2) not null
 )engine = InnoDB;
 
-/*create table log(
+create table log(
 );*/
