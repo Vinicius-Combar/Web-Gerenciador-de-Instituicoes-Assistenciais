@@ -28,12 +28,15 @@ create table interno(
     internacao date not null,
     saida date,
     readmitido date,
-    orbito date,
+    obito date,
     nome_contato_urgente varchar(60),
-    telefone_contato_urgente varchar(33)
+    telefone_contato_urgente_1 varchar(33),
+    telefone_contato_urgente_2 varchar(33),
+    telefone_contato_urgente_3 varchar(33),
     
+    foreign key(id_pessoa) references pessoa(id_pessoa)
     
-);
+)engine = InnoDB;
 
 create table voluntario(
 	id_voluntario int not null primary key,
@@ -47,16 +50,15 @@ create table voluntario_judicial(
 	id_voluntario_judicial int not null primary key,
     id_pessoa int not null,
     
-   documneto_judicial varchar(40),
+	documento_judicial varchar(40),
     foreign key(id_pessoa) references pessoa(id_pessoa)
 )engine = InnoDB;
 
 create table funcionario(
 	id_funcionario int not null primary key,
-    id_usuario int,
     id_pessoa int not null,
     
-    image mediumtext,
+    imagem mediumtext,
     #nome varchar(100),
     #telefone int,
     vale_transporte int,
@@ -88,7 +90,7 @@ há uma verificação nela antes de ser criado um usuário, só pode haver um us
 cadastrado na tabela funcionários. Será pedido o CPF na hora do cadastro de uma conta, esse CPF será procurado na tabela
 funcionários, se este existir ele reconhecerá que a conta a ser criada pertence ao funcionário com CPF correspondente.
 Se não for encontrado esse CPF na tabela funcionário, não poderá ser criada a conta */
-
+ 
 create table cargo(
 	id_cargo int not null primary key,
     
@@ -120,11 +122,11 @@ values
 
 create table funcionario_cargo(
 	id_cargo int not null,
-	id_funcionario int not null,
+	id_pessoa int not null,
     
     primary key(id_cargo,id_funcionario),
     foreign key(id_cargo) references cargo(id_cargo),
-    foreign key(id_funcionario) references funcionario(id_funcionario)
+    foreign key(id_pessoa) references pessoa(id_pessoa)
 )engine = InnoDB; /* Definirá quais os cargos o funcionário terá. */
 
 create table permissao(
