@@ -7,14 +7,13 @@ create table pessoa (
     
     login varchar(40), #CPF da pessoa
     senha varchar(70),
-    nome varchar(100),
-    sexo varchar(10),
+    nome varchar(100) not null,
+    sexo varchar(10) not null,
     telefone int,
     data_nascimento date not null,
     cep int not null,
     cidade varchar(40) not null,
     bairro varchar(40) not null,
-    ibge int,
     rua varchar(40) not null,
     numero_endereco int,
     complemento varchar(50)
@@ -52,6 +51,7 @@ create table voluntario_judicial(
     
 	documento_judicial varchar(40),
     foreign key(id_pessoa) references pessoa(id_pessoa)
+    
 )engine = InnoDB;
 
 create table funcionario(
@@ -122,24 +122,43 @@ values
 
 create table funcionario_cargo(
 	id_cargo int not null,
-	id_pessoa int not null,
+	id_funcionario int not null,
     
     primary key(id_cargo,id_funcionario),
     foreign key(id_cargo) references cargo(id_cargo),
-    foreign key(id_pessoa) references pessoa(id_pessoa)
+    foreign key(id_funcionario) references funcionario(id_funcionario)
+    
 )engine = InnoDB; /* Definirá quais os cargos o funcionário terá. */
 
-create table permissao(
+create table voluntario_cargo(
+	id_cargo int not null,
+	id_voluntario int not null,
+    
+    primary key(id_cargo,id_voluntario),
+    foreign key(id_cargo) references cargo(id_cargo),
+    foreign key(id_voluntario) references voluntario(id_voluntario)
+)engine = InnoDB;
+
+create table voluntario_judicial_cargo(
+	id_cargo int not null,
+	id_voluntarioJ int not null,
+    
+    primary key(id_cargo,id_voluntarioJ),
+    foreign key(id_cargo) references cargo(id_cargo),
+    foreign key(id_voluntarioJ) references voluntario_judicial(id_voluntario_judicial)
+)engine = InnoDB;
+
+/*create table permissao(
 	id_permissao int not null primary key,
 	
     descricao varchar(100)
-)engine = InnoDB; /* tabela que tem uma ligação de muitos para muitos com o cargo. Ela diz as tabelas que poderão ser 
- acessadas pelos cargos */
+)engine = InnoDB;  tabela que tem uma ligação de muitos para muitos com o cargo. Ela diz as tabelas que poderão ser 
+ acessadas pelos cargos 
 
 insert into permissao(id_permissao,descricao)
 values
 (01,'alimentos'),
-(02,'estoque'); /* tabelas que serão acessadas */
+(02,'estoque'); /* tabelas que serão acessadas 
 
 create table cargo_permissao(
 	id_cargo int not null,
@@ -152,34 +171,41 @@ create table cargo_permissao(
 insert into cargo_permissao(id_cargo,id_permissao)
 values
 (05,01),
-(05,02);
+(05,02);*/
 
 #select user();
 
 create table categoria(
 	id_categoria int not null primary key,
+    
     descricao varchar(50)
+    
 )engine = InnoDB;
 
 create table produto(
 	id_produto int not null primary key,
     id_categoria int not null,
+    
     descricao varchar(50),
 
     foreign key(id_categoria) references categoria(id_categoria)
+    
 )engine = InnoDB; # vai dizer quais produtos existem na instituição. Ex: arroz, feijão, camisa masculina, casaco, roteador...
 
 create table estoque(
 	id_estoque int not null primary key,
     id_produto int not null,
+    
     qtd float,
     
     foreign key(id_produto) references produto(id_produto)
+    
 )engine = InnoDB;
 
 create table entrada(
 	id_entrada int not null primary key,
     id_funcionario int not null,
+    
     data_entrada date,
     total float,
     
@@ -190,29 +216,32 @@ create table entrada(
 create table item_entrada(
 	id_item_entrada int not null primary key,
     id_entrada int not null,
+    
     id_produto int not null,
     qtd float,
     valor_unitario float,
     
     foreign key(id_entrada) references entrada(id_entrada),
     foreign key(id_produto) references produto(id_produto)
+    
 )engine = InnoDB;
 
 create table saida(
 	id_saida int not null primary key,
     id_funcionario int not null,
+    
     data_saida date,
     total float,
     
     foreign key(id_funcionario) references funcionario(id_funcionario)
     
-
 )engine = InnoDB;
 
 create table item_saida(
 	id_item_saida int not null primary key,
     id_saida int not null,
     id_produto int not null,
+    
     qtd float,
     valor_unitario float,
     
