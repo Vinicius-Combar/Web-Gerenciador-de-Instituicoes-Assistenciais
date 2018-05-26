@@ -54,9 +54,26 @@ create table voluntario_judicial(
     
 )engine = InnoDB;
 
+ create table quadro_horario(
+	id_quadro_horario int not null primary key,
+	escala varchar(15),
+	tipo varchar(15),
+	carga_horaria decimal(5,2),	
+    entrada1 varchar(5),
+	saida1 varchar(5),
+	entrada2 varchar(5),
+	saida2 varchar(5),
+	total varchar(5),
+	dias_trabalhados varchar(100),
+	folga varchar(30),
+	observacoes varchar(240)
+
+ )engine = InnoDB;
+
 create table funcionario(
 	id_funcionario int not null primary key,
     id_pessoa int not null,
+    id_quadro_horario int not null,
     
     imagem mediumtext,
     #nome varchar(100),
@@ -82,8 +99,15 @@ create table funcionario(
     complemento varchar(100),*/
     nome_mae varchar(100),
     nome_pai varchar(100),
+    calcado varchar(2),
+    calca varchar(2),
+    jaleco varchar(2),
+    camisa varchar(2),
+    usa_vtp varchar(3),
+    cesta_basica varchar(3),
 	
-    foreign key(id_pessoa) references pessoa(id_pessoa)
+    foreign key(id_pessoa) references pessoa(id_pessoa),
+    foreign key(id_quadro_horario) references quadro_horario(id_quadro_horario)
     
 )engine = InnoDB;/* criação da tabela funcionario, irá armazenar todos os funcionarios e suas informações. A partir dela
 há uma verificação nela antes de ser criado um usuário, só pode haver um usuário de um funcionário se este estiver 
