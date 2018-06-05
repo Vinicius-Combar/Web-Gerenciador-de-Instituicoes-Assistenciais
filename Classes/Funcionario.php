@@ -1,6 +1,8 @@
 <?php
 
-class Funcionario extends \Pessoa
+require_once('acesso.php');
+
+class Funcionario extends Pessoa
 {  
     private $idfuncionario;
     private $idpessoa;

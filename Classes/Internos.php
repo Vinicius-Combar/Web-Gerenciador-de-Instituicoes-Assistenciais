@@ -1,6 +1,8 @@
 <?php
 
-class Internos extends \Pessoa
+require_once('acesso.php');
+
+class Internos extends Pessoa
 {
     private $contato_urgente;
     private $nome_mae;

@@ -5,7 +5,7 @@ class Acesso {
     private $host = 'localhost';
     private $usuario = 'root';
     private $senha = '';
-    private $banco = 'systfm';
+    private $banco = 'wegia';
 
     function getHost() {
 
